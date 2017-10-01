@@ -1,5 +1,6 @@
 defmodule Identicon do
   @moduledoc """
+    Generate identicons from a text input
   """
 
   def main(input) do
@@ -51,19 +52,21 @@ defmodule Identicon do
 
   def build_pixel_map(%Identicon.Image{grid: grid} = image) do
     pixel_map = Enum.map grid, fn({_code, index}) ->
-      x = rem(index, 5) * 50
-      y = div(index, 5) * 50
+      x = rem(index, 5) * 50 + 30
+      y = div(index, 5) * 50 + 30
       top_left = {x, y}
       bottom_right = {x + 50, y + 50}
       {top_left, bottom_right}
     end
-grid
+
     %Identicon.Image{image | pixel_map: pixel_map}
   end
 
   def draw_image(%Identicon.Image{pixel_map: pixel_map, color: color}) do
-    image = :egd.create(250, 250)
+    image = :egd.create(310, 310)
     fill = :egd.color(color)
+
+    :egd.filledRectangle(image, {0, 0}, {310, 310}, :egd.color({240, 240, 240}))
 
     Enum.each pixel_map, fn({start, stop}) ->
       :egd.filledRectangle(image, start, stop, fill)
